@@ -73,8 +73,15 @@ class LabReport(object):
         self.parsedText = {}
         keywords = {}
         # TODO fixme, remove limits for two tags
-        self.parsedText[tags[0]] = text[text.find(tags[0]):text.find(tags[1])]
-        self.parsedText[tags[1]] = text[text.find(tags[1]):]
+        # self.parsedText[tags[0]] = text[text.find(tags[0]):text.find(tags[1])]
+        # self.parsedText[tags[1]] = text[text.find(tags[1]):]
+        totalTags = len(tags)
+        for i in range(totalTags):
+            if i < totalTags - 1:
+                self.parsedText[tags[i]] = text[text.find(tags[i]):text.find(tags[i + 1])]
+            elif i == totalTags - 1:
+                self.parsedText[tags[i]] = text[text.find(tags[i]):]
+
         self.statistics['nKeywords'] = {}
         for tag in tags:
             self.parsedText[tag] = re.sub(tag, '', self.parsedText[tag])
