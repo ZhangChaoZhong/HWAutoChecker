@@ -120,3 +120,12 @@ class LabReport(object):
         for tag in self.similarityText:
             print("\t same text", tag, "in other reports:",
                   max([txt['similarity'] for txt in self.similarityText[tag]]))
+
+    def evaluate(self, grade, weight, remarks, textTags):
+        self.scores['final'] = 0
+        self.scores['remark'] = ""
+        self.scores['final'] += weight['nImages'] * grade['nImages'][self.scores["nImages"]]
+        self.scores['remark'] += remarks['nImages'][self.scores["nImages"]]
+        for tag in textTags:
+            self.scores['final'] += weight['nKeywords'][tag] * grade['nKeywords'][tag][self.scores["nKeywords"][tag]]
+            self.scores['remark'] += remarks['nKeywords'][tag][self.scores["nKeywords"][tag]]

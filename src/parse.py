@@ -14,6 +14,39 @@ import openpyxl as pyxl
 
 datafile = '/Users/wliu/PycharmProjects/HWAutoChecker/data/云平台管理技术/实验1'
 textTags = ['实验步骤', '实验总结']
+grade = {'nImages': {'A': 95, 'B': 85, 'C': 75, 'D': 70, 'E': 60},
+         'nKeywords': {
+             '实验步骤': {'A': 95, 'B': 85, 'C': 75, 'D': 70, 'E': 60},
+             '实验总结': {'A': 95, 'B': 85, 'C': 75, 'D': 70, 'E': 60},
+         }}
+weight = {'nImages': 0.7,
+          'nKeywords': {
+              '实验步骤': 0.1,
+              '实验总结': 0.2,
+          }}
+remarks = {'nImages': {
+    'A': '实验结果记录非常详细，',
+    'B': '实验结果记录比较详细，',
+    'C': '实验结果记录基本完整，',
+    'D': '实验结果记录部分完整，',
+    'E': '实验结果记录欠完整，'
+},
+    'nKeywords': {
+        '实验步骤': {
+            'A': '实验步骤正确完整，',
+            'B': '实验步骤比较完整，',
+            'C': '实验步骤基本完整，',
+            'D': '实验步骤欠完整，',
+            'E': '实验步骤缺失比较多，'
+        },
+        '实验总结': {
+            'A': '实验总结详尽且到位。',
+            'B': '实验总结比较到位。',
+            'C': '实验总结基本到位。',
+            'D': '实验总结不到位。',
+            'E': '实验总结缺。'
+        },
+    }}
 
 
 def calculateTextSimilarity(reports, tag, threshold=0.8):
@@ -123,6 +156,7 @@ def traversal(path):
         #       img, text)
         report.scores['nImages'] = img
         report.scores['nKeywords'] = text
+        report.evaluate(grade, weight, remarks, textTags)
     # drawHistgram(statisticText[textTags[1]])
     return reports
 
@@ -143,6 +177,12 @@ def saveReportInfo(filename, sheetname, reports):
             colIndex = chr(headIndex) + '1'
             ws[colIndex] = tag
             headIndex += 1
+    colIndex = chr(headIndex) + '1'
+    ws[colIndex] = '成绩'
+    headIndex += 1
+    colIndex = chr(headIndex) + '1'
+    ws[colIndex] = '评语'
+    headIndex += 1
 
     for row in ws.iter_rows(min_row=2):
         studentID = row[0].value
@@ -161,10 +201,15 @@ def saveReportInfo(filename, sheetname, reports):
             for tag in textTags:
                 row[colIndex].value = report.scores["nKeywords"][tag]
                 colIndex += 1
+            row[colIndex].value = report.scores["final"]
+            colIndex += 1
+            row[colIndex].value = report.scores["remark"]
+            colIndex += 1
+
         for i in row:
             print(i.value, end="\t")
 
-        print("")
+        print(report.scores['final'])
 
     wb.save(filename)
     wb.close()
