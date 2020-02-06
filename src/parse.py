@@ -13,15 +13,15 @@ import matplotlib.pyplot as plt
 import openpyxl as pyxl
 
 datafile = '/Users/wliu/PycharmProjects/HWAutoChecker/data/云平台管理技术/实验1'
-textTags = ['实验步骤', '实验总结']
+textTags = ['实验总结']
 grade = {'nImages': {'A': 95, 'B': 85, 'C': 75, 'D': 70, 'E': 60},
          'nKeywords': {
              '实验步骤': {'A': 95, 'B': 85, 'C': 75, 'D': 70, 'E': 60},
              '实验总结': {'A': 95, 'B': 85, 'C': 75, 'D': 70, 'E': 60},
          }}
-weight = {'nImages': 0.7,
+weight = {'nImages': 0.8,
           'nKeywords': {
-              '实验步骤': 0.1,
+              '实验步骤': 0.0,
               '实验总结': 0.2,
           }}
 remarks = {'nImages': {

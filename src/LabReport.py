@@ -124,8 +124,26 @@ class LabReport(object):
     def evaluate(self, grade, weight, remarks, textTags):
         self.scores['final'] = 0
         self.scores['remark'] = ""
-        self.scores['final'] += weight['nImages'] * grade['nImages'][self.scores["nImages"]]
+        penalty = 0
+        if self.similarityImage:
+            penalty = max([img['similarity'] for img in self.similarityImage])
+        self.scores['final'] += weight['nImages'] * grade['nImages'][self.scores["nImages"]] * (1 - penalty)
         self.scores['remark'] += remarks['nImages'][self.scores["nImages"]]
         for tag in textTags:
-            self.scores['final'] += weight['nKeywords'][tag] * grade['nKeywords'][tag][self.scores["nKeywords"][tag]]
+            penalty = 0
+            if tag in self.similarityText:
+                penalty = max([txt['similarity'] for txt in self.similarityText[tag]])
+
+            self.scores['final'] += weight['nKeywords'][tag] * grade['nKeywords'][tag][
+                self.scores["nKeywords"][tag]] * (1 - penalty)
             self.scores['remark'] += remarks['nKeywords'][tag][self.scores["nKeywords"][tag]]
+
+        if self.similarityImage:
+            self.scores['remark'] += '报告中图片和以下同学的报告雷同：'
+            for entity in self.similarityImage:
+                self.scores['remark'] += entity["studentName"]+","
+
+        if tag in self.similarityText:
+            self.scores['remark'] += '报告中'+tag+'和以下同学的报告雷同：'
+            for entity in self.similarityText[tag]:
+                self.scores['remark'] += entity["studentName"] + ","
