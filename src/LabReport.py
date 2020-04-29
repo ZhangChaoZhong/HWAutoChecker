@@ -72,9 +72,6 @@ class LabReport(object):
     def parseReportText(self, text, tags):
         self.parsedText = {}
         keywords = {}
-        # TODO fixme, remove limits for two tags
-        # self.parsedText[tags[0]] = text[text.find(tags[0]):text.find(tags[1])]
-        # self.parsedText[tags[1]] = text[text.find(tags[1]):]
         totalTags = len(tags)
         for i in range(totalTags):
             if i < totalTags - 1:
